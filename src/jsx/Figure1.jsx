@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 // Load helpers.
 import CSVtoJSON from './helpers/CSVtoJSON.js';
-import ChartStackedLine from './components/ChartStackedLine.jsx';
+import ChartLine from './components/ChartLine.jsx';
 
 import '../styles/styles.less';
 
@@ -10,22 +10,17 @@ function Figure1() {
   // Data states.
   const [dataFigure, setDataFigure] = useState(false);
 
-  const cleanData = (data) => data.map((el, i) => {
-    const labels = Object.keys(el).filter(val => val !== 'Name').map(val => parseInt(val, 10));
+  const cleanData = (data) => data.map((el) => {
+    const labels = Object.keys(el).filter(val => val !== 'Name').map(val => Date.UTC(parseInt(val, 10), 0, 1));
     const values = Object.values(el).map(val => (parseFloat(val))).filter(val => !Number.isNaN(val));
 
     return ({
       data: values.map((e, j) => ({
         x: labels[j],
-        y: e
+        y: e,
       })),
-      zoneAxis: 'x',
-      zones: [{
-        value: 2022
-      }, {
-        fillColor: (i === 1) ? 'rgba(114, 191, 68, 0.4)' : 'rgba(0, 158, 219, 0.4)'
-      }],
-      name: el.Name
+      name: el.Name,
+      lineWidth: (el.Name === 'Knowledge-intensive services') ? 6 : 3
     });
   });
 
@@ -48,15 +43,15 @@ function Figure1() {
   return (
     <div className="app">
       {dataFigure && (
-      <ChartStackedLine
+      <ChartLine
         data={dataFigure}
         data_decimals={0}
         idx="1"
-        note="The graph provides estimates from 1950 to 2021 and projections from 2022 to 2050 of total population"
-        source="UNCTADstat based on UN DESA Population Division, World Population Prospects 2022."
-        subtitle="People living in developing and developed economies, billions"
+        note="Note"
+        source="Source"
+        subtitle="Subtitle, US dollars at current prices in millions"
         suffix=""
-        title="World population growth is mostly in developing economies"
+        title="Title"
         ylabel=""
       />
       )}

@@ -1,19 +1,17 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-// https://www.npmjs.com/package/react-is-visible
-import 'intersection-observer';
-import { useIsVisible } from 'react-is-visible';
-
 // https://www.highcharts.com/
 import Highcharts from 'highcharts';
 import highchartsAccessibility from 'highcharts/modules/accessibility';
 import highchartsExporting from 'highcharts/modules/exporting';
 import highchartsExportData from 'highcharts/modules/export-data';
 
-// Load helpers.
+// https://www.npmjs.com/package/react-is-visible
+import 'intersection-observer';
+import { useIsVisible } from 'react-is-visible';
+
 import roundNr from '../helpers/RoundNr.js';
-import formatNr from '../helpers/FormatNr.js';
 
 highchartsAccessibility(Highcharts);
 highchartsExporting(Highcharts);
@@ -44,13 +42,13 @@ Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
   return path;
 };
 
-function StackedLineChart({
-  data, data_decimals, idx, note, source, subtitle, title, xlabel, ylabel, ymax, ymin
+function LineChart({
+  allow_decimals, data, idx, line_width, note, show_first_label, source, subtitle, suffix, title
 }) {
   const chartRef = useRef();
-
-  const chartHeight = 650;
   const isVisible = useIsVisible(chartRef, { once: true });
+
+  const chartHeight = 600;
   const createChart = useCallback(() => {
     Highcharts.chart(`chartIdx${idx}`, {
       caption: {
@@ -58,9 +56,10 @@ function StackedLineChart({
         margin: 15,
         style: {
           color: 'rgba(0, 0, 0, 0.8)',
+          fontFamily: 'Roboto',
           fontSize: '14px'
         },
-        text: `<em>Source:</em> ${source} ${note ? (`<br /><em>Note:</em> <span>${note}</span>`) : ''}`,
+        text: `<em>Source:</em> <a href="https://unctadstat.unctad.org/wds/">${source}</a> ${note ? (`<br /><em>Note:</em> <span>${note}</span>`) : ''}`,
         verticalAlign: 'bottom',
         x: 0
       },
@@ -72,6 +71,7 @@ function StackedLineChart({
           }
         },
         height: chartHeight,
+        marginRight: 80,
         resetZoomButton: {
           theme: {
             fill: '#fff',
@@ -81,7 +81,8 @@ function StackedLineChart({
                 fill: '#0077b8',
                 stroke: 'transparent',
                 style: {
-                  color: '#fff'
+                  color: '#fff',
+                  fontFamily: 'Roboto',
                 }
               }
             },
@@ -98,14 +99,15 @@ function StackedLineChart({
           fontFamily: 'Roboto',
           fontWeight: 400
         },
-        type: 'area'
+        type: 'line',
+        zoomType: 'x'
       },
-      colors: ['#009edb', '#72bf44'],
+      colors: ['rgba(0, 158, 219, 1)', 'rgba(0, 73, 135, 1)', '#72bf44'],
       credits: {
         enabled: false
       },
       exporting: {
-        filename: '2022-africa_stat_day-unctad',
+        enabled: true,
         buttons: {
           contextButton: {
             menuItems: ['viewFullscreen', 'separator', 'downloadPNG', 'downloadPDF', 'separator', 'downloadCSV'],
@@ -117,6 +119,7 @@ function StackedLineChart({
       legend: {
         align: 'right',
         enabled: (data.length > 1),
+        itemDistance: 20,
         itemStyle: {
           color: '#000',
           cursor: 'default',
@@ -125,27 +128,27 @@ function StackedLineChart({
           fontWeight: 400
         },
         layout: 'horizontal',
-        margin: 0,
         verticalAlign: 'top'
       },
       plotOptions: {
-        area: {
+        line: {
           animation: {
             duration: 3000,
           },
           cursor: 'pointer',
           dataLabels: {
+            allowOverlap: false,
             enabled: false,
             formatter() {
               // eslint-disable-next-line react/no-this-in-sfc
-              return `<div style="color: ${this.color}">${roundNr(this.y, data_decimals)}</div>`;
+              return `<span style="color: ${this.color}">${roundNr(this.y, 0).toLocaleString('en-US')}</div>`;
             },
             style: {
               color: 'rgba(0, 0, 0, 0.8)',
               fontFamily: 'Roboto',
-              fontSize: '22px',
+              fontSize: '18px',
               fontWeight: 400,
-              textOutline: '3px solid #fff'
+              textOutline: '2px solid #fff'
             }
           },
           events: {
@@ -157,7 +160,7 @@ function StackedLineChart({
             }
           },
           selected: true,
-          lineWidth: 0,
+          lineWidth: line_width,
           marker: {
             enabled: false,
             radius: 0,
@@ -170,14 +173,13 @@ function StackedLineChart({
             },
             symbol: 'circle'
           },
-          stacking: 'normal',
           states: {
             hover: {
               halo: {
                 size: 0
               },
               enabled: false,
-              lineWidth: 0,
+              lineWidth: line_width,
             }
           }
         }
@@ -186,23 +188,39 @@ function StackedLineChart({
         rules: [{
           chartOptions: {
             title: {
-              margin: 20
+              margin: 10
             }
           },
           condition: {
-            maxWidth: 800
+            maxWidth: 630
           }
         }, {
           chartOptions: {
+            chart: {
+              height: 700
+            },
+            legend: {
+              layout: 'horizontal'
+            },
             title: {
+              margin: 10,
               style: {
-                fontSize: '22px',
-                lineHeight: '26px'
+                fontSize: '26px',
+                lineHeight: '30px'
               }
             }
           },
           condition: {
             maxWidth: 500
+          }
+        }, {
+          chartOptions: {
+            chart: {
+              height: 800
+            }
+          },
+          condition: {
+            maxWidth: 400
           }
         }]
       },
@@ -217,8 +235,8 @@ function StackedLineChart({
           lineHeight: '18px'
         },
         text: subtitle,
-        widthAdjust: -144,
-        x: 100,
+        widthAdjust: -100,
+        x: 100
       },
       title: {
         align: 'left',
@@ -226,11 +244,12 @@ function StackedLineChart({
         style: {
           color: '#000',
           fontSize: '30px',
-          fontWeight: 700
+          fontWeight: 700,
+          lineHeight: '34px'
         },
         text: title,
-        widthAdjust: -130,
-        x: 100,
+        widthAdjust: -160,
+        x: 100
       },
       tooltip: {
         backgroundColor: '#fff',
@@ -241,83 +260,58 @@ function StackedLineChart({
         formatter() {
           // eslint-disable-next-line react/no-this-in-sfc
           const values = this.points.filter(point => point.series.name !== '').map(point => [point.series.name.split(' (')[0], point.y, point.color]);
-          // eslint-disable-next-line react/no-this-in-sfc
-          const total = this.points.reduce((acc, val) => acc + val.y, 0);
           const rows = [];
-          rows.push(values.map(point => `<div style="color: ${point[2]}"><span class="tooltip_label">${(point[0]) ? `${point[0]}: ` : ''}</span><span class="tooltip_value">${formatNr(roundNr(point[1], data_decimals))} = ${formatNr(roundNr((point[1] / total) * 100, 0))}%</span></div>`).join(''));
+          rows.push(values.map(point => `<div><span class="tooltip_label" style="color: ${point[2]}">${(point[0]) ? `${point[0]}: ` : ''}</span><span class="tooltip_value">${roundNr(point[1], 0).toLocaleString('en-US')}${suffix}</span></div>`).join(''));
           // eslint-disable-next-line react/no-this-in-sfc
-          return `<div class="tooltip_container"><h3 class="tooltip_header">${xlabel} ${this.x}</h3>${rows}<br /><div><span class="tooltip_label">Total:</span> <span class="tooltip_value">${formatNr(roundNr(total, data_decimals))}</span></div></div>`;
+          return `<div class="tooltip_container"><h3 class="tooltip_header">Year ${(new Date(this.x)).getFullYear()}</h3>${rows}</div>`;
         },
         shadow: false,
         shared: true,
         useHTML: true
       },
       xAxis: {
-        accessibility: {
-          description: xlabel
-        },
         allowDecimals: false,
-        categories: data[0].labels,
         crosshair: {
-          color: 'transparent',
+          color: '#ccc',
           width: 1
         },
         labels: {
-          rotation: 0,
+          enabled: true,
+          style: {
+            color: 'rgba(0, 0, 0, 0.8)',
+            fontFamily: 'Roboto',
+            fontSize: '14px',
+            fontWeight: 400
+          },
+          useHTML: false,
+          y: 30
+        },
+        lineColor: '#ccc',
+        lineWidth: 0,
+        opposite: false,
+        // tickInterval: 1000 * 60 * 60 * 24 * 365,
+        tickLength: 5,
+        tickWidth: 1,
+        type: 'datetime',
+        title: {
+          enabled: true,
           style: {
             color: 'rgba(0, 0, 0, 0.8)',
             fontFamily: 'Roboto',
             fontSize: '16px',
             fontWeight: 400
-          }
-        },
-        lineColor: 'transparent',
-        lineWidth: 0,
-        opposite: false,
-        plotLines: [{
-          color: '#aaa096',
-          label: {
-            align: 'center',
-            rotation: 0,
-            style: {
-              color: 'rgba(0, 0, 0, 0.8)',
-              fontFamily: 'Roboto',
-              fontSize: '16px',
-              fontWeight: 700,
-            },
-            text: 'Projections →',
-            verticalAlign: 'top',
-            x: 10,
-            y: 30
           },
-          zIndex: 4,
-          value: 2022,
-          width: 2
-        }],
-        showFirstLabel: true,
-        showLastLabel: true,
-        tickWidth: 0,
-        title: {
-          text: null
+          text: 'Year'
         }
       },
       yAxis: {
-        accessibility: {
-          description: 'Index'
-        },
-        allowDecimals: true,
-        custom: {
-          allowNegativeLog: true
-        },
+        allowDecimals: allow_decimals,
         gridLineColor: 'rgba(124, 112, 103, 0.2)',
-        gridLineWidth: 1,
         gridLineDashStyle: 'shortdot',
+        gridLineWidth: 1,
         labels: {
-          formatter() {
-            // eslint-disable-next-line react/no-this-in-sfc
-            return `${this.value / 1000000}`;
-          },
-          rotation: 0,
+          formatter: (el) => el.value,
+          reserveSpace: true,
           style: {
             color: 'rgba(0, 0, 0, 0.8)',
             fontFamily: 'Roboto',
@@ -325,46 +319,28 @@ function StackedLineChart({
             fontWeight: 400
           }
         },
-        endOnTick: false,
         lineColor: 'transparent',
         lineWidth: 0,
-        max: ymax,
-        min: ymin,
+        max: undefined,
         opposite: false,
-        startOnTick: false,
-        plotLines: [{
-          color: 'rgba(124, 112, 103, 0.6)',
-          value: 0,
-          width: 1
-        }],
-        showFirstLabel: false,
+        showFirstLabel: show_first_label,
         showLastLabel: true,
         title: {
           enabled: true,
           reserveSpace: true,
-          rotation: 0,
           style: {
             color: 'rgba(0, 0, 0, 0.8)',
             fontFamily: 'Roboto',
             fontSize: '16px',
             fontWeight: 400
           },
-          text: ylabel,
-          verticalAlign: 'top',
+          text: null,
         },
         type: 'linear'
       }
-    }, (chart) => {
-      setTimeout(() => {
-        const { caption } = chart;
-        caption.styles.fontSize = 14;
-        chart.update({
-          caption
-        });
-      }, 100);
     });
     chartRef.current.querySelector(`#chartIdx${idx}`).style.opacity = 1;
-  }, [data, data_decimals, idx, note, source, subtitle, title, xlabel, ylabel, ymax, ymin]);
+  }, [allow_decimals, data, idx, line_width, note, show_first_label, source, subtitle, suffix, title]);
 
   useEffect(() => {
     if (isVisible === true) {
@@ -375,7 +351,7 @@ function StackedLineChart({
   }, [createChart, isVisible]);
 
   return (
-    <div className="chart_container" style={{ minHeight: chartHeight }}>
+    <div className="chart_container">
       <div ref={chartRef}>
         {(isVisible) && (<div className="chart" id={`chartIdx${idx}`} />)}
       </div>
@@ -384,27 +360,26 @@ function StackedLineChart({
   );
 }
 
-StackedLineChart.propTypes = {
+LineChart.propTypes = {
+  allow_decimals: PropTypes.bool,
   data: PropTypes.instanceOf(Array).isRequired,
-  data_decimals: PropTypes.number.isRequired,
   idx: PropTypes.string.isRequired,
+  line_width: PropTypes.number,
   note: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  show_first_label: PropTypes.bool,
   source: PropTypes.string.isRequired,
   subtitle: PropTypes.string,
+  suffix: PropTypes.string,
   title: PropTypes.string.isRequired,
-  xlabel: PropTypes.string,
-  ylabel: PropTypes.string,
-  ymax: PropTypes.number,
-  ymin: PropTypes.number
 };
 
-StackedLineChart.defaultProps = {
+LineChart.defaultProps = {
+  allow_decimals: true,
+  line_width: 5,
   note: false,
+  show_first_label: true,
   subtitle: false,
-  xlabel: 'Year',
-  ylabel: '',
-  ymax: undefined,
-  ymin: undefined
+  suffix: '',
 };
 
-export default StackedLineChart;
+export default LineChart;
