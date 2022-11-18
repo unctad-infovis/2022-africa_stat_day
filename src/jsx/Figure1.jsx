@@ -49,7 +49,7 @@ function Figure1() {
         idx="1"
         note=""
         source="UNCTADstat as jointly compiled by UNCTAD and WTO."
-        subtitle="Subtitle, millions of USD in current prices"
+        subtitle="Value of services exports, millions of USD in current prices"
         suffix=""
         title="Knowledge-intensive industries lead Africa’s services exports following pandemic"
         ylabel=""
