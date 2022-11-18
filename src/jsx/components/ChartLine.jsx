@@ -71,7 +71,6 @@ function LineChart({
           }
         },
         height: chartHeight,
-        marginRight: 80,
         resetZoomButton: {
           theme: {
             fill: '#fff',
@@ -248,7 +247,7 @@ function LineChart({
           lineHeight: '34px'
         },
         text: title,
-        widthAdjust: -160,
+        widthAdjust: -144,
         x: 100
       },
       tooltip: {
@@ -289,6 +288,26 @@ function LineChart({
         lineColor: '#ccc',
         lineWidth: 0,
         opposite: false,
+        plotLines: [{
+          color: '#aaa096',
+          label: {
+            align: 'right',
+            style: {
+              color: 'rgba(0, 0, 0, 0.8)',
+              fontFamily: 'Roboto',
+              fontSize: '16px',
+              fontWeight: 700,
+            },
+            rotation: 0,
+            verticalAlign: 'bottom',
+            text: 'WHO declared the outbreak<br />a pandemic on 11 March 2020',
+            x: -10,
+            y: -50
+          },
+          zIndex: 4,
+          value: Date.UTC(2020, 2, 11),
+          width: 0
+        }],
         // tickInterval: 1000 * 60 * 60 * 24 * 365,
         tickLength: 5,
         tickWidth: 1,

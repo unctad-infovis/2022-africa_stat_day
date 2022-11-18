@@ -47,11 +47,11 @@ function Figure1() {
         data={dataFigure}
         data_decimals={0}
         idx="1"
-        note="Note"
-        source="Source"
-        subtitle="Subtitle, US dollars at current prices in millions"
+        note=""
+        source="UNCTADstat as jointly compiled by UNCTAD and WTO."
+        subtitle="Subtitle, millions of USD in current prices"
         suffix=""
-        title="Title"
+        title="Knowledge-intensive industries lead Africa’s services exports following pandemic"
         ylabel=""
       />
       )}
