@@ -261,7 +261,7 @@ function LineChart({
           // eslint-disable-next-line react/no-this-in-sfc
           const values = this.points.filter(point => point.series.name !== '').map(point => [point.series.name.split(' (')[0], point.y, point.color]);
           const rows = [];
-          rows.push(values.map(point => `<div><span class="tooltip_label" style="color: ${point[2]}">${(point[0]) ? `${point[0]}: ` : ''}</span><span class="tooltip_value">${roundNr(point[1], 0).toLocaleString('en-US')}${suffix}</span></div>`).join(''));
+          rows.push(values.map(point => `<div><span class="tooltip_label" style="color: ${point[2]}">${(point[0]) ? `${point[0]}: ` : ''}</span><span class="tooltip_value">$${roundNr(point[1], 0).toLocaleString('en-US')}${suffix}</span></div>`).join(''));
           // eslint-disable-next-line react/no-this-in-sfc
           return `<div class="tooltip_container"><h3 class="tooltip_header">Year ${(new Date(this.x)).getFullYear()}</h3>${rows}</div>`;
         },
@@ -310,7 +310,7 @@ function LineChart({
         gridLineDashStyle: 'shortdot',
         gridLineWidth: 1,
         labels: {
-          formatter: (el) => el.value,
+          formatter: (el) => `$${el.value.toLocaleString('en-US')}`,
           reserveSpace: true,
           style: {
             color: 'rgba(0, 0, 0, 0.8)',
