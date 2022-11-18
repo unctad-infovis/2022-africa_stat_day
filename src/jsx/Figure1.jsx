@@ -49,9 +49,9 @@ function Figure1() {
         idx="1"
         note="Knowledge-intensive services include the following Extended balance of payments services classification 2010 service items: insurance and pension services, financial services, telecommunications, computer, and information services, other business services, and personal, cultural, and recreational services."
         source="UNCTADstat as jointly compiled by UNCTAD and WTO."
-        subtitle="Value of services exports, millions of USD in current prices"
+        subtitle="Value of services exports, millions of US dollars in current prices"
         suffix=""
-        title="Knowledge-intensive services lead Africa’s services exports following pandemic"
+        title="Knowledge-intensive services lead Africa’s services exports following COVID-19"
         ylabel=""
       />
       )}

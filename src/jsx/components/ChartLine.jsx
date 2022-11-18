@@ -239,7 +239,7 @@ function LineChart({
       },
       title: {
         align: 'left',
-        margin: 40,
+        margin: 20,
         style: {
           color: '#000',
           fontSize: '30px',
