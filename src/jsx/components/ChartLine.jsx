@@ -239,7 +239,7 @@ function LineChart({
       },
       title: {
         align: 'left',
-        margin: 20,
+        margin: 30,
         style: {
           color: '#000',
           fontSize: '30px',
@@ -300,7 +300,7 @@ function LineChart({
             },
             rotation: 0,
             verticalAlign: 'bottom',
-            text: 'WHO declared the outbreak<br />a pandemic on 11 March 2020',
+            text: 'WHO declared COVID-19<br />a pandemic on 11 March 2020',
             x: -10,
             y: -50
           },
