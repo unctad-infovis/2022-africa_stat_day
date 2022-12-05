@@ -2,6 +2,9 @@
 
 **Live demo** https://unctad-infovis.github.io/2022-africa_stat_day/
 
+## Used in
+* [Knowledge-intensive services show resilience and promise in Africa](https://unctad.org/data-visualization/knowledge-intensive-services-show-resilience-and-promise-africa)
+
 ## Rights of usage
 
 Contact Teemo Tebest.
