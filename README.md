@@ -4,6 +4,8 @@
 
 ## Used in
 * [Knowledge-intensive services show resilience and promise in Africa](https://unctad.org/data-visualization/knowledge-intensive-services-show-resilience-and-promise-africa)
+* [UNCTAD/Twitter](https://twitter.com/UNCTAD/status/1593666270041604096)
+* [UNCTAD/Instagram](https://www.instagram.com/p/ClHJYQgMmGG/)
 
 ## Rights of usage
 
