@@ -15,9 +15,9 @@ function Figure1() {
     const values = Object.values(el).map(val => (parseFloat(val))).filter(val => !Number.isNaN(val));
 
     return ({
-      data: values.map((e, j) => ({
+      data: values.map((val, j) => ({
         x: labels[j],
-        y: e,
+        y: val,
       })),
       name: el.Name,
       lineWidth: (el.Name === 'Knowledge-intensive services') ? 6 : 3
